@@ -2,7 +2,7 @@ package com.nick.dao.entities;
 
 import java.util.UUID;
 
-abstract class BKEntity {
+public abstract class BKEntity {
     private UUID id;
     private String name;
 
