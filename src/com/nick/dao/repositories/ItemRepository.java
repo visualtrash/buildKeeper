@@ -1,11 +1,13 @@
 package com.nick.dao.repositories;
 
+import com.nick.dao.entities.Item;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public class ItemRepository implements BKRepository {
-
+    private List<Item> items;
 
     @Override
     public Optional get(UUID id) {

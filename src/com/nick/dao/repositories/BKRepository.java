@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public interface BKRepository<T> {
 
-    Optional<T> get(UUID id);
+    Optional<T> get(UUID id) throws Exception;
 
     Optional<T> get(String name);
 
@@ -16,5 +16,5 @@ public interface BKRepository<T> {
 
     void update(T t, String[] params);
 
-    void delete(T t);
+    void delete(T t) throws Exception;
 }
