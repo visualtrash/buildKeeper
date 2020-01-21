@@ -19,16 +19,6 @@ public class Build extends BKEntity {
         this.ability = ability;
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Hero getHero() {
         return hero;
     }
