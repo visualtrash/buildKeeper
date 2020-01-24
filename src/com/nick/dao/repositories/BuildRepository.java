@@ -2,10 +2,6 @@ package com.nick.dao.repositories;
 
 import com.nick.dao.entities.Build;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,9 +28,6 @@ public class BuildRepository implements BKRepository<Build> {
     }
 
     public List getAll() {
-        for (Build buildOfList : buildList) {
-            System.out.println(buildOfList.getName());
-        }
         return buildList;
     }
 
@@ -43,30 +36,19 @@ public class BuildRepository implements BKRepository<Build> {
         buildList.add(build);
     }
 
-    //save build on disk
-    @SuppressWarnings("Duplicates")
-    public void update(Build build) {
-        StringBuilder result = new StringBuilder();
 
-        for (Build currentBuild : buildList) {
-            String buildLine =
-                    currentBuild.getName() + "<|>" + currentBuild.getHero() + "<|>"
-                            + currentBuild.getItems() + "<|>" + currentBuild.getAbility() + "<|>"
-                            + currentBuild.getRune() + "<|>" + currentBuild.getId();
-            result.append(buildLine).append("\n");
-        }
+    public void update(Build buildToUpdate) throws Exception {
+        Optional<Build> optionalBuild = get(buildToUpdate.getId());
 
-        File file = new File("C://BKrep", "BuildRep.txt");
+        if (optionalBuild.isPresent()) {
+            Build build1 = optionalBuild.get();
+            build1.setName(buildToUpdate.getName());
+            build1.setHero(buildToUpdate.getHero());
+            build1.setAbility(buildToUpdate.getAbility());
+            build1.setItems(buildToUpdate.getItems());
+            build1.setRune(buildToUpdate.getRune());
+        } else System.out.println("build not found(null)");
 
-        FileOutputStream fileOutputStream = null;
-        try {
-            fileOutputStream = new FileOutputStream(file);
-            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
-            bufferedWriter.write(result.toString());
-            bufferedWriter.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void delete(Build build) throws Exception {

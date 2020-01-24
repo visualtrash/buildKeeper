@@ -13,7 +13,7 @@ public interface BKRepository<T> {
 
     void save(T t);
 
-    void update(T t);
+    void update(T t) throws Exception;
 
     void delete(T t) throws Exception;
 }

@@ -2,10 +2,6 @@ package com.nick.dao.repositories;
 
 import com.nick.dao.entities.Item;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -32,9 +28,6 @@ public class ItemRepository implements BKRepository<Item> {
     }
 
     public List getAll() {
-        for (Item itemOfList : itemList) {
-            System.out.println(itemOfList.getName());
-        }
         return itemList;
     }
 
@@ -43,27 +36,15 @@ public class ItemRepository implements BKRepository<Item> {
         itemList.add(item);
     }
 
-    //save item on disk
-    @SuppressWarnings("Duplicates")
-    public void update(Item item) {
-        StringBuilder result = new StringBuilder();
+    public void update(Item itemToUpdate) throws Exception {
+        Optional<Item> optionalItem = get(itemToUpdate.getId());
 
-        for (Item currentItem : itemList) {
-            String itemLine = currentItem.getName();
-            result.append(itemLine).append("\n");
-        }
+        if (optionalItem.isPresent()) {
+            Item item1 = optionalItem.get();
+            item1.setName(itemToUpdate.getName());
 
-        File file = new File("C://BKrep", "ItemRep.txt");
+        } else System.out.println("item not found(null)");
 
-        FileOutputStream fileOutputStream = null;
-        try {
-            fileOutputStream = new FileOutputStream(file);
-            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
-            bufferedWriter.write(result.toString());
-            bufferedWriter.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void delete(Item item) throws Exception {

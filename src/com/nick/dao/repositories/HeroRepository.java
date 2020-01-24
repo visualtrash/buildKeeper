@@ -2,10 +2,6 @@ package com.nick.dao.repositories;
 
 import com.nick.dao.entities.Hero;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -43,29 +39,16 @@ public class HeroRepository implements BKRepository<Hero> {
         heroesList.add(hero);
     }
 
-    //save hero on disk
-    @SuppressWarnings("Duplicates")
-    public void update(Hero hero) {
-        StringBuilder result = new StringBuilder();
+    public void update(Hero heroToUpdate) throws Exception {
+        Optional<Hero> optionalHero = get(heroToUpdate.getId());
 
-        for (Hero currentBuild : heroesList) {
-            String heroLine =
-                    currentBuild.getName() + "<|>" + currentBuild.getPosition() +
-                            "<|>" + currentBuild.getId();
-            result.append(heroLine).append("\n");
-        }
+        if (optionalHero.isPresent()) {
+            Hero hero1 = optionalHero.get();
+            hero1.setName(heroToUpdate.getName());
+            hero1.setPosition(heroToUpdate.getPosition());
 
-        File file = new File("C://BKrep", "HeroRep.txt");
+        } else System.out.println("item not found(null)");
 
-        FileOutputStream fileOutputStream = null;
-        try {
-            fileOutputStream = new FileOutputStream(file);
-            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
-            bufferedWriter.write(result.toString());
-            bufferedWriter.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 
