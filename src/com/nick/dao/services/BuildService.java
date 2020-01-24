@@ -100,6 +100,7 @@ public class BuildService {
             }
         }
 
+
         if (!buildWasFounded) {
             throw new Exception("Cannot find build for ID = " + id);
         }
