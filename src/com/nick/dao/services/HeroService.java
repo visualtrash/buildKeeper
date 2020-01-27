@@ -1,41 +1,34 @@
 package com.nick.dao.services;
 
 import com.nick.dao.entities.Hero;
+import com.nick.dao.repositories.HeroRepository;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 public class HeroService {
 
-    private List<Hero> heroesList;
+    private HeroRepository heroRepository;
 
-    public HeroService(List<Hero> heroesList) {
-        this.heroesList = heroesList;
+    public HeroService(HeroRepository heroRepository) {
+        this.heroRepository = heroRepository;
     }
 
-    public Hero add(String name, String position) {
-        Hero hero = new Hero(name, position);
-
-        heroesList.add(hero);
-
-        return hero;
+    public void save(Hero hero) throws Exception {
+        heroRepository.save(hero);
     }
 
-    public void remove(UUID id) throws Exception {
-        // флаг, обозначающий был ли найден герой в списке
-        boolean heroWasFounded = false;
+    public void remove(Hero hero) throws Exception {
+        heroRepository.delete(hero);
+    }
 
-        for (Hero hero : heroesList) {
-            if (hero.getId().equals(id)) {
-                heroWasFounded = true;
+    @SuppressWarnings("unchecked")
+    public void setHeroPosition(Hero hero, String position) throws Exception {
+        Optional<Hero> optionalHero = heroRepository.get(hero.getName());
 
-                heroesList.remove(hero);
-                break;
-            }
-        }
-
-        if (!heroWasFounded) {
-            throw new Exception("Cannot find the hero for ID = " + id);
+        if (optionalHero.isPresent()) {
+            Hero hero1 = optionalHero.get();
+            hero1.setPosition(position);
+            heroRepository.update(hero1);
         }
     }
 }

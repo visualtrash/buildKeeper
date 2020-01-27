@@ -4,104 +4,63 @@ import com.nick.dao.entities.Build;
 import com.nick.dao.entities.Hero;
 import com.nick.dao.entities.Item;
 import com.nick.dao.entities.Rune;
-import com.nick.enums.Ability;
+import com.nick.dao.repositories.BuildRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class BuildService {
 
-    private List<Build> buildList;
+    private BuildRepository buildRepository;
 
-    public BuildService(List<Build> buildList) {
-        this.buildList = buildList;
+    public BuildService(BuildRepository buildRepository) {
+        this.buildRepository = buildRepository;
     }
 
-    public Build add(String name, Hero hero, List<Item> items, Rune rune, Ability ability) {
-        Build build = new Build(name, hero, items, rune, ability);
 
-        buildList.add(build);
-
-        return build;
+    public void save(Build build) {
+        buildRepository.save(build);
     }
 
-    public void remove(UUID id) throws Exception {
-        // флаг, обозначающий был ли найден билд в списке
-        boolean buildWasFounded = false;
+    public void remove(Build build) throws Exception {
+        buildRepository.delete(build);
+    }
 
-        for (Build build : buildList) {
-            if (build.getId().equals(id)) {
-                buildWasFounded = true;
 
-                buildList.remove(build);
-                break;
-            }
-        }
-
-        if (!buildWasFounded) {
-            throw new Exception("Cannot find the build for ID = " + id);
+    public void updateName(UUID id, String name) throws Exception {
+        Optional<Build> optionalBuild = buildRepository.get(id);
+        if (optionalBuild.isPresent()) {
+            Build build1 = optionalBuild.get();
+            build1.setName(name);
+            buildRepository.update(build1);
         }
     }
 
-    public void rename(UUID id, String name) throws Exception {
-        // флаг, обозначающий был ли найден билд в списке
-        boolean buildWasFounded = false;
-
-        for (Build build : buildList) {
-            if (build.getId().equals(id)) {
-                buildWasFounded = true;
-
-                build.setName(name);
-
-                break;
-            }
-        }
-
-        if (!buildWasFounded) {
-            throw new Exception("Cannot find build for ID = " + id);
+    public void updateRunes(UUID id, Rune rune) throws Exception {
+        Optional<Build> optionalBuild = buildRepository.get(id);
+        if (optionalBuild.isPresent()) {
+            Build build1 = optionalBuild.get();
+            build1.setRune(rune);
+            buildRepository.update(build1);
         }
     }
 
-    public void editItems(UUID id, List<Item> itemList) throws Exception {
-        // флаг, обозначающий был ли найден билд в списке
-        boolean buildWasFounded = false;
-
-        for (Build build : buildList) {
-            if (build.getId().equals(id)) {
-                buildWasFounded = true;
-
-                build.setItems(itemList);
-
-                break;
-            }
-        }
-
-        if (!buildWasFounded) {
-            throw new Exception("Cannot find build for ID = " + id);
+    public void updateHero(UUID id, Hero hero) throws Exception {
+        Optional<Build> optionalBuild = buildRepository.get(id);
+        if (optionalBuild.isPresent()) {
+            Build build1 = optionalBuild.get();
+            build1.setHero(hero);
+            buildRepository.update(build1);
         }
     }
 
-    // TODO: после класс Rune
-    public void editRunes(UUID id) throws Exception {
-
-    }
-
-    public void editHero(UUID id, Hero hero) throws Exception {
-        // флаг, обозначающий был ли найден билд в списке
-        boolean buildWasFounded = false;
-
-        for (Build build : buildList) {
-            if (build.getId().equals(id)) {
-                buildWasFounded = true;
-
-                build.setHero(hero);
-
-                break;
-            }
-        }
-
-        if (!buildWasFounded) {
-            throw new Exception("Cannot find build for ID = " + id);
+    public void updateItems(UUID id, List<Item> items) throws Exception {
+        Optional<Build> optionalBuild = buildRepository.get(id);
+        if (optionalBuild.isPresent()) {
+            Build build1 = optionalBuild.get();
+            build1.setItems(items);
+            buildRepository.update(build1);
         }
     }
 }

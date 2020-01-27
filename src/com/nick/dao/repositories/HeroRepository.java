@@ -35,7 +35,7 @@ public class HeroRepository implements BKRepository<Hero> {
     }
 
     //add hero in List
-    public void save(Hero hero) {
+    public void save(Hero hero) throws Exception {
         heroesList.add(hero);
     }
 

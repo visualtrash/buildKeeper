@@ -11,7 +11,7 @@ public interface BKRepository<T> {
 
     List<T> getAll();
 
-    void save(T t);
+    void save(T t) throws Exception;
 
     void update(T t) throws Exception;
 
