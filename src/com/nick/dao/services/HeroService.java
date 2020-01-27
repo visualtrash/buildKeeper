@@ -21,7 +21,7 @@ public class HeroService {
         heroRepository.delete(hero);
     }
 
-    @SuppressWarnings("unchecked")
+
     public void setHeroPosition(Hero hero, String position) throws Exception {
         Optional<Hero> optionalHero = heroRepository.get(hero.getName());
 
