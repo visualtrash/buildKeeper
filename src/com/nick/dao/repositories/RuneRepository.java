@@ -20,7 +20,7 @@ public class RuneRepository implements BKRepository {
     }
 
 
-    public void save(Object o) {
+    public void add(Object o) {
 
     }
 

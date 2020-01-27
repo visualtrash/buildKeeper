@@ -32,7 +32,7 @@ public class BuildRepository implements BKRepository<Build> {
     }
 
     //add build in List
-    public void save(Build build) {
+    public void add(Build build) {
         buildList.add(build);
     }
 

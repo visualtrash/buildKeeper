@@ -11,7 +11,7 @@ public class ItemService {
     }
 
     public void save(Item item) {
-        itemRepository.save(item);
+        itemRepository.add(item);
     }
 
     public void remove(Item hero) throws Exception {

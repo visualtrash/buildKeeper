@@ -32,7 +32,7 @@ public class ItemRepository implements BKRepository<Item> {
     }
 
     //add item in List
-    public void save(Item item) {
+    public void add(Item item) {
         itemList.add(item);
     }
 

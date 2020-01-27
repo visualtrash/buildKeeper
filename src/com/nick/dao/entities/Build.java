@@ -50,12 +50,4 @@ public class Build extends BKEntity {
     public void setAbility(Ability ability) {
         this.ability = ability;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

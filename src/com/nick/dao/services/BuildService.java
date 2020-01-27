@@ -20,7 +20,7 @@ public class BuildService {
 
 
     public void save(Build build) {
-        buildRepository.save(build);
+        buildRepository.add(build);
     }
 
     public void remove(Build build) throws Exception {

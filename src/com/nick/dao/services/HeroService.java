@@ -14,7 +14,7 @@ public class HeroService {
     }
 
     public void save(Hero hero) throws Exception {
-        heroRepository.save(hero);
+        heroRepository.add(hero);
     }
 
     public void remove(Hero hero) throws Exception {

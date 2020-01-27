@@ -16,12 +16,4 @@ public class Hero extends BKEntity {
     public void setPosition(String position) {
         this.position = position;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
