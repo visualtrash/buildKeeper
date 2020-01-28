@@ -3,10 +3,7 @@ package com.nick.dao.repositories;
 import com.google.gson.Gson;
 import com.nick.dao.entities.Build;
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -76,47 +73,21 @@ public class BuildRepository implements BKRepository<Build> {
         }
     }
 
-    //save on disk
-    //* public void save(String fileName) throws IOException {
-    //     StringBuilder result = new StringBuilder();
-    //      for (Build build : buildList) {
-    //         String currentBuildLine =
-    //                build.getId() + "<|>" + build.getName()  + "<|>" +
-    //                        build.getHero() + "<|>" + build.getItems() +
-    //                       "<|>" + build.getAbility() + "<|>" + build.getRune();
-    //      result.append(currentBuildLine).append("\n");
-    //  }
-    //   FileOutputStream fileOutputStream = new FileOutputStream(fileName, false);
-    //    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
-    //    bufferedWriter.write(String.valueOf(result));
-    //   bufferedWriter.close();
-    //}
-
-    public void persist() {
-        //Path filePath = Paths.get("C:\\BuildKeeper\\builds.json");
-
-        String fileName = "";
-        try {
-            Path filePath = Files.createDirectories(Paths.get("C:\\BuildKeeper\\builds.json"));
-            fileName = String.valueOf(filePath.getFileName());
-        } catch (Exception e) {
-            System.out.println("can not make the directories");
-        }
+    public void persist() throws IOException {
+        // create space on disk for save
+        Path filePath = Files.createDirectories(Paths.get("C:\\BuildKeeper\\saveData"));
+        File file = new File(filePath + "\\build.json");
 
         Gson gson = new Gson();
-
         String buildListJson = gson.toJson(buildList);
 
-        try {
-            FileOutputStream fileOutputStream = new FileOutputStream(fileName);
-            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
-            bufferedWriter.write(buildListJson);
-            bufferedWriter.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        FileOutputStream fileOutputStream = new FileOutputStream(file);
+        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
+        bufferedWriter.write(buildListJson);
+        bufferedWriter.close();
     }
 
+    // TODO: 28.01.2020
     //load from disk
     public void load(String json) throws IOException {
         Gson gson = new Gson();
