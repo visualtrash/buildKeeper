@@ -37,6 +37,7 @@ public class HeroRepository implements BKRepository<Hero> {
     //add hero in List
     public void add(Hero hero) throws Exception {
         heroesList.add(hero);
+        update(hero);
     }
 
     public void update(Hero heroToUpdate) throws Exception {
@@ -61,6 +62,7 @@ public class HeroRepository implements BKRepository<Hero> {
                 heroWasFounded = true;
 
                 heroesList.remove(currentHero);
+                update(hero);
                 break;
             }
         if (!heroWasFounded) {
