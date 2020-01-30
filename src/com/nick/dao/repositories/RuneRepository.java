@@ -28,10 +28,6 @@ public class RuneRepository implements BKRepository {
 
     }
 
-    public void update(Object o, String[] params) {
-
-    }
-
     public void delete(Object o) {
 
     }

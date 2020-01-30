@@ -1,25 +1,15 @@
 package com.nick.dao.repositories;
 
-import com.google.gson.Gson;
 import com.nick.dao.entities.Build;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class BuildRepository implements BKRepository<Build> {
+public class BuildRepository extends AbstractRepository implements BKRepository<Build> {
     private List<Build> buildList = new ArrayList<>();
-    private File file = new File("\\BuildKeeper\\saveData\\build.json");
 
-    public static String readFile(String path) throws IOException {
-        byte[] encoded = Files.readAllBytes(Paths.get(path));
-        return new String(encoded, StandardCharsets.US_ASCII);
-    }
 
     public Optional get(String name) {
         for (Build build : buildList) {
@@ -64,17 +54,6 @@ public class BuildRepository implements BKRepository<Build> {
         update(build);
     }
 
-    public void persist() throws IOException {
-        // create space on disk for save
-        Gson gson = new Gson();
-        String buildListJson = gson.toJson(buildList);
-
-        FileOutputStream fileOutputStream = new FileOutputStream(file);
-        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
-        bufferedWriter.write(buildListJson);
-        bufferedWriter.close();
-    }
-
     public void delete(Build build) throws Exception {
         // флаг, был ли найден build в списке
         boolean buildWasFounded = false;
@@ -92,20 +71,7 @@ public class BuildRepository implements BKRepository<Build> {
         }
     }
 
-    //load from disk
-    public List<Build> load() {
-        if (file.exists()) {
-            String stringJson = "";
-
-            try {
-                stringJson = readFile(file.getPath());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            Gson gson = new Gson();
-            buildList = gson.fromJson(stringJson, List.class);
-        }
-        return buildList;
+    String getSaveFileName() {
+        return "buildsList";
     }
 }

@@ -7,13 +7,12 @@ import com.nick.dao.entities.Rune;
 import com.nick.dao.repositories.BuildRepository;
 import com.nick.enums.Ability;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
 
         //Test
         Hero atrox = new Hero("Atrox", "top");

@@ -19,7 +19,7 @@ public class BuildService {
     }
 
 
-    public void save(Build build) {
+    public void save(Build build) throws Exception {
         buildRepository.add(build);
     }
 

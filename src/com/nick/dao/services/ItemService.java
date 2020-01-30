@@ -10,7 +10,7 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
-    public void save(Item item) {
+    public void save(Item item) throws Exception {
         itemRepository.add(item);
     }
 
