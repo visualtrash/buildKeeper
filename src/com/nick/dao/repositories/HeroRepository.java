@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class HeroRepository implements BKRepository<Hero> {
+public class HeroRepository extends AbstractRepository implements BKRepository<Hero> {
     private List<Hero> heroesList;
 
     public Optional<Hero> get(UUID id) throws Exception {
@@ -68,5 +68,9 @@ public class HeroRepository implements BKRepository<Hero> {
         if (!heroWasFounded) {
             throw new Exception("Cannot find the hero");
         }
+    }
+
+    String getSaveFileName() {
+        return "heroesList";
     }
 }
