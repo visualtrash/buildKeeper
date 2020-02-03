@@ -65,7 +65,7 @@ public class ItemRepository extends AbstractRepository implements BKRepository<I
         }
     }
 
-    String getSaveFileName() {
+    public static String getSaveFileName() {
         return "itemList";
     }
 }

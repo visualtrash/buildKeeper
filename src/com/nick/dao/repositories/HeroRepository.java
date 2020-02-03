@@ -70,7 +70,7 @@ public class HeroRepository extends AbstractRepository implements BKRepository<H
         }
     }
 
-    String getSaveFileName() {
+    public static String getSaveFileName() {
         return "heroesList";
     }
 }

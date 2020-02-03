@@ -20,7 +20,9 @@ public abstract class AbstractRepository<T> {
         return new String(encoded, StandardCharsets.US_ASCII);
     }
 
-    abstract String getSaveFileName();
+    static String getSaveFileName() {
+        return null;
+    }
 
     public void persist() throws IOException {
         // create space on disk for save

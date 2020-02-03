@@ -71,7 +71,7 @@ public class BuildRepository extends AbstractRepository implements BKRepository<
         }
     }
 
-    String getSaveFileName() {
+    public static String getSaveFileName() {
         return "buildsList";
     }
 }
