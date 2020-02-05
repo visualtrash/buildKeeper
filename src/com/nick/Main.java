@@ -23,7 +23,10 @@ public class Main {
 
         Rune rune = new Rune();
 
-        Build build = new Build("Atrox-top", atrox, items1, rune, Ability.Q);
+        List<Ability> abilities = new ArrayList<>();
+        abilities.add(Ability.Q);
+
+        Build build = new Build("Atrox-top", atrox, items1, rune, abilities);
 
         BuildRepository buildRepository = new BuildRepository();
         buildRepository.add(build);

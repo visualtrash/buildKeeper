@@ -9,13 +9,13 @@ public class Build extends BKEntity {
     private Hero hero;
     private List<Item> items;
     private Rune rune;
-    private Ability ability;
+    private List<Ability> abilities;
 
-    public Build(String name, Hero hero, List<Item> items, Rune rune, Ability ability) {
+    public Build(String name, Hero hero, List<Item> items, Rune rune, List<Ability> ability) {
         this.hero = hero;
         this.items = items;
         this.rune = rune;
-        this.ability = ability;
+        this.abilities = ability;
     }
 
     public Hero getHero() {
@@ -42,11 +42,11 @@ public class Build extends BKEntity {
         this.rune = rune;
     }
 
-    public Ability getAbility() {
-        return ability;
+    public List<Ability> getAbilities() {
+        return abilities;
     }
 
-    public void setAbility(Ability ability) {
-        this.ability = ability;
+    public void setAbilities(List<Ability> abilities) {
+        this.abilities = abilities;
     }
 }

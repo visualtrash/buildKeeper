@@ -13,7 +13,7 @@ public class HeroService {
         this.heroRepository = heroRepository;
     }
 
-    public void save(Hero hero) throws Exception {
+    public void add(Hero hero) throws Exception {
         heroRepository.add(hero);
     }
 

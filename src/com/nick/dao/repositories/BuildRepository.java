@@ -41,7 +41,7 @@ public class BuildRepository extends AbstractRepository implements BKRepository<
             Build build1 = optionalBuild.get();
             build1.setName(buildToUpdate.getName());
             build1.setHero(buildToUpdate.getHero());
-            build1.setAbility(buildToUpdate.getAbility());
+            build1.setAbilities(buildToUpdate.getAbilities());
             build1.setItems(buildToUpdate.getItems());
             build1.setRune(buildToUpdate.getRune());
         } else System.out.println("build not found(null)");

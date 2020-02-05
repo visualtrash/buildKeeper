@@ -3,6 +3,10 @@ package com.nick.dao.services;
 import com.nick.dao.entities.Item;
 import com.nick.dao.repositories.ItemRepository;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 public class ItemService {
     private ItemRepository itemRepository;
 
@@ -10,11 +14,19 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
-    public void save(Item item) throws Exception {
+    public void add(Item item) throws Exception {
         itemRepository.add(item);
     }
 
-    public void remove(Item hero) throws Exception {
-        itemRepository.delete(hero);
+    public void remove(Item item) throws Exception {
+        itemRepository.delete(item);
+    }
+
+    public List getItemList() {
+        return itemRepository.getAll();
+    }
+
+    public Optional getItemById(UUID itemId) throws Exception {
+        return itemRepository.get(itemId);
     }
 }

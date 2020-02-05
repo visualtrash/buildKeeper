@@ -1,8 +1,12 @@
 package com.nick.enums;
 
+import java.util.List;
+
 public enum Ability {
     Q,
     W,
     E,
-    R
+    R;
+
+    private List<Ability> itemList;
 }
