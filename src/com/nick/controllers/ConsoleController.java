@@ -71,9 +71,11 @@ public class ConsoleController {
 
                         itemService.getItemById(userItemId);
                         break;
+                    default:
+                        System.out.println("cannot find the item :(");
                 }
 
-
+                removeItem();
                 break;
             case Commands.EXIT_COMMAND:
                 // выходим из раздела
@@ -169,9 +171,9 @@ public class ConsoleController {
     }
 
     private static void removeItem() throws Exception {
-        System.out.println("enter the NAME of ITEM");
-        String itemName = reader.readLine().toLowerCase();
+        System.out.println("enter the ID of ITEM for REMOVE");
+        UUID userItemRemoveId = UUID.fromString(reader.readLine());
 
-
+        itemService.removeById(userItemRemoveId);
     }
 }

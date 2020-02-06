@@ -48,16 +48,51 @@ public class ItemRepository extends AbstractRepository implements BKRepository<I
 
     }
 
+
     public void delete(Item item) throws Exception {
         // флаг, был ли найден hero в списке
         boolean heroWasFounded = false;
 
-        for (Item currentHero : itemList)
-            if (currentHero.getId().equals(item.getId())) {
+        for (Item currentItem : itemList)
+            if (currentItem.getId().equals(item.getId())) {
                 heroWasFounded = true;
 
-                itemList.remove(currentHero);
+                itemList.remove(currentItem);
                 update(item);
+                break;
+            }
+        if (!heroWasFounded) {
+            throw new Exception("Cannot find the item");
+        }
+    }
+
+    public void removeById(UUID ItemId) throws Exception {
+        // флаг, был ли найден hero в списке
+        boolean heroWasFounded = false;
+
+        for (Item currentItem : itemList)
+            if (currentItem.getId().equals(ItemId)) {
+                heroWasFounded = true;
+
+                itemList.remove(currentItem);
+                System.out.println("the ITEM was successfully REMOVED");
+                break;
+            }
+        if (!heroWasFounded) {
+            throw new Exception("Cannot find the item");
+        }
+    }
+
+    public void removeByName(String nameItem) throws Exception {
+        // флаг, был ли найден hero в списке
+        boolean heroWasFounded = false;
+
+        for (Item currentItem : itemList)
+            if (currentItem.getName().equals(nameItem)) {
+                heroWasFounded = true;
+
+                itemList.remove(currentItem);
+                System.out.println("the ITEM was successfully REMOVED");
                 break;
             }
         if (!heroWasFounded) {

@@ -29,4 +29,8 @@ public class ItemService {
     public Optional getItemById(UUID itemId) throws Exception {
         return itemRepository.get(itemId);
     }
+
+    public void removeById(UUID itemId) throws Exception {
+        itemRepository.removeById(itemId);
+    }
 }
