@@ -70,6 +70,38 @@ public class HeroRepository extends AbstractRepository implements BKRepository<H
         }
     }
 
+    public void deleteById(UUID heroId) throws Exception {
+        // флаг, был ли найден hero в списке
+        boolean heroWasFounded = false;
+        for (Hero currentHero : heroesList)
+            if (currentHero.getId().equals(heroId)) {
+                heroWasFounded = true;
+
+                heroesList.remove(currentHero);
+
+                break;
+            }
+        if (!heroWasFounded) {
+            throw new Exception("Cannot find the item");
+        }
+    }
+
+    public void removeByName(String nameHero) throws Exception {
+        // флаг, был ли найден hero в списке
+        boolean heroWasFounded = false;
+        for (Hero currentHero : heroesList)
+            if (currentHero.getName().equals(nameHero)) {
+                heroWasFounded = true;
+
+                heroesList.remove(currentHero);
+
+                break;
+            }
+        if (!heroWasFounded) {
+            throw new Exception("Cannot find the item");
+        }
+    }
+
     public static String getSaveFileName() {
         return "heroesList";
     }

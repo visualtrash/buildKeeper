@@ -18,8 +18,8 @@ public class ItemService {
         itemRepository.add(item);
     }
 
-    public void remove(Item item) throws Exception {
-        itemRepository.delete(item);
+    public void add(String itemName) throws Exception {
+        itemRepository.add(new Item(itemName));
     }
 
     public List getItemList() {
@@ -31,6 +31,6 @@ public class ItemService {
     }
 
     public void removeById(UUID itemId) throws Exception {
-        itemRepository.removeById(itemId);
+        itemRepository.deleteById(itemId);
     }
 }

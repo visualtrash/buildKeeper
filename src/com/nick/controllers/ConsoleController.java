@@ -1,5 +1,6 @@
 package com.nick.controllers;
 
+import com.google.gson.Gson;
 import com.nick.dao.entities.Item;
 import com.nick.dao.services.BuildService;
 import com.nick.dao.services.HeroService;
@@ -25,7 +26,7 @@ public class ConsoleController {
 
         while (true) {
             // ввод команды юзера
-            System.out.println("What to edit? n\\BUILD(b) / HERO(h) / ITEM(i)");
+            System.out.println("What to edit? BUILD(b) / HERO(h) / ITEM(i)");
             String userChoice = reader.readLine().toLowerCase();
 
             switch (userChoice) {
@@ -50,7 +51,7 @@ public class ConsoleController {
 
     // в этом методе мы обрабатываем все пользовательские действия над итемами
     private static void editItems() throws Exception {
-        System.out.println("What do you want to do with ITEMs? n\\ADD(-a) / REMOVE(-r)");
+        System.out.println("What do you want to do with ITEMs? ADD(-a) / REMOVE(-r) / SHOW all ITEMS(-g) / SHOW ITEM by id(-gid)");
         String userItemCommand = reader.readLine().toLowerCase();
 
         switch (userItemCommand) {
@@ -58,24 +59,16 @@ public class ConsoleController {
                 createItem();
                 break;
             case Commands.REMOVE_COMMAND:
-                System.out.println("GET ALL items(-g) or GET BY NAME(-gn)");
-                String userGetCommand = reader.readLine().toLowerCase();
-
-                switch (userGetCommand) {
-                    case Commands.GET_ALL_COMMAND:
-                        itemService.getItemList();
-                        break;
-                    case Commands.GET_BY_NAME_COMMAND:
-                        System.out.println("enter the ID of ITEM");
-                        UUID userItemId = UUID.fromString(reader.readLine());
-
-                        itemService.getItemById(userItemId);
-                        break;
-                    default:
-                        System.out.println("cannot find the item :(");
-                }
-
                 removeItem();
+                break;
+            case Commands.GET_ALL_COMMAND:
+                showItems();
+                break;
+            case Commands.GET_BY_ID_COMMAND:
+                System.out.println("enter the ID of ITEM");
+                UUID userItemId = UUID.fromString(reader.readLine());
+
+                showItemsById(userItemId);
                 break;
             case Commands.EXIT_COMMAND:
                 // выходим из раздела
@@ -87,13 +80,42 @@ public class ConsoleController {
     }
 
     // в этом методе мы обрабатываем все пользовательские действия над героями
-    private static void editHeroes() {
+    private static void editHeroes() throws Exception {
+        System.out.println("What do you want to do with HEROES? ADD(-a) / REMOVE(-r) / SHOW all HEROES(-g) / SHOW HERO by id(-gid)");
+        String userHeroCommand = reader.readLine().toLowerCase();
+
+        switch (userHeroCommand) {
+            case Commands.ADD_COMMAND:
+
+                break;
+            case Commands.REMOVE_COMMAND:
+                System.out.println("GET ALL heroes(-g) or GET BY NAME(-gn)");
+                String userGetCommand = reader.readLine().toLowerCase();
+
+                removeHero();
+                break;
+            case Commands.GET_ALL_COMMAND:
+                heroService.getHeroList();
+                break;
+            case Commands.GET_BY_ID_COMMAND:
+                System.out.println("enter the ID of HERO");
+                UUID userHeroId = UUID.fromString(reader.readLine());
+
+                heroService.getHeroById(userHeroId);
+                break;
+            case Commands.EXIT_COMMAND:
+                // выходим из раздела
+                return;
+            default:
+                System.out.println("Unknown command :(");
+                break;
+        }
     }
 
     // в этом методе мы обрабатываем все пользовательские действия над билдами
     private static void editBuilds() throws Exception {
         while (true) {
-            System.out.println("What do you want to do with BUILD? n\\ADD(-a) / UPDATE(-u) / REMOVE(-r)");
+            System.out.println("What do you want to do with BUILD? ADD(-a) / UPDATE(-u) / REMOVE(-r) / SHOW all BUILDS(-g) / SHOW BUILD by id(-gid)");
             String userBuildCommand = reader.readLine().toLowerCase();
 
             switch (userBuildCommand) {
@@ -102,6 +124,12 @@ public class ConsoleController {
                     break;
                 case Commands.REMOVE_COMMAND:
                     removeBuild();
+                    break;
+                case Commands.GET_ALL_COMMAND:
+
+                    break;
+                case Commands.GET_BY_ID_COMMAND:
+
                     break;
                 case Commands.UPDATE_COMMAND:
                     updateBuild();
@@ -163,6 +191,7 @@ public class ConsoleController {
         //buildService.add(userBuildName, userHeroName, userHeroPosition, userBuildItems);
     }
 
+    //exc
     private static void createItem() throws Exception {
         System.out.println("enter the NAME of new ITEM");
         String itemName = reader.readLine().toLowerCase();
@@ -170,10 +199,34 @@ public class ConsoleController {
         itemService.add(new Item(itemName));
     }
 
+    private static void showItems() throws Exception {
+        Gson gson = new Gson();
+        String itemListAsString = gson.toJson(itemService.getItemList());
+        System.out.println(itemListAsString);
+    }
+
+    private static void showItemsById(UUID itemId) throws Exception {
+        List<Item> list = itemService.getItemList();
+        for (Item eachItem : list) {
+            if (eachItem.getId().equals(itemId)) {
+                Gson gson = new Gson();
+                String itemAsString = gson.toJson(eachItem);
+                System.out.println(itemAsString);
+            }
+        }
+    }
+
     private static void removeItem() throws Exception {
         System.out.println("enter the ID of ITEM for REMOVE");
         UUID userItemRemoveId = UUID.fromString(reader.readLine());
 
         itemService.removeById(userItemRemoveId);
+    }
+
+    private static void removeHero() throws Exception {
+        System.out.println("enter the ID of HERO for REMOVE");
+        UUID userHeroRemoveId = UUID.fromString(reader.readLine());
+
+        heroService.removeById(userHeroRemoveId);
     }
 }

@@ -12,7 +12,7 @@ public class Commands {
     static final String REMOVE_COMMAND = "-r";
     static final String UPDATE_COMMAND = "-u";
     static final String GET_ALL_COMMAND = "-g";
-    static final String GET_BY_NAME_COMMAND = "-gn";
+    static final String GET_BY_ID_COMMAND = "-gid";
 
     static final String EXIT_COMMAND = "exit";
 }

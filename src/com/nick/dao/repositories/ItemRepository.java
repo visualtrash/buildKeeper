@@ -66,7 +66,7 @@ public class ItemRepository extends AbstractRepository implements BKRepository<I
         }
     }
 
-    public void removeById(UUID ItemId) throws Exception {
+    public void deleteById(UUID ItemId) throws Exception {
         // флаг, был ли найден hero в списке
         boolean heroWasFounded = false;
 
