@@ -12,6 +12,8 @@ public class Build extends BKEntity {
     private List<Ability> abilities;
 
     public Build(String name, Hero hero, List<Item> items, Rune rune, List<Ability> ability) {
+        super(name);
+
         this.hero = hero;
         this.items = items;
         this.rune = rune;

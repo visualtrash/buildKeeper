@@ -6,11 +6,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class HeroRepository extends AbstractRepository implements BKRepository<Hero> {
-    private List<Hero> heroesList;
+public class HeroRepository extends AbstractRepository<Hero> {
 
-    public Optional<Hero> get(UUID id) throws Exception {
-        for (Hero hero : heroesList) {
+    public Optional<Hero> get(UUID id) {
+        for (Hero hero : data) {
             if (hero.getId().equals(id)) {
                 return Optional.of(hero);
             }
@@ -19,7 +18,7 @@ public class HeroRepository extends AbstractRepository implements BKRepository<H
     }
 
     public Optional get(String name) {
-        for (Hero hero : heroesList) {
+        for (Hero hero : data) {
             if (hero.getName().equals(name)) {
                 return Optional.of(hero);
             }
@@ -28,19 +27,19 @@ public class HeroRepository extends AbstractRepository implements BKRepository<H
     }
 
     public List getAll() {
-        for (Hero heroOfList : heroesList) {
+        for (Hero heroOfList : data) {
             System.out.println(heroOfList.getName());
         }
-        return heroesList;
+        return data;
     }
 
     //add hero in List
-    public void add(Hero hero) throws Exception {
-        heroesList.add(hero);
+    public void add(Hero hero) {
+        data.add(hero);
         update(hero);
     }
 
-    public void update(Hero heroToUpdate) throws Exception {
+    public void update(Hero heroToUpdate) {
         Optional<Hero> optionalHero = get(heroToUpdate.getId());
 
         if (optionalHero.isPresent()) {
@@ -57,11 +56,11 @@ public class HeroRepository extends AbstractRepository implements BKRepository<H
         // флаг, был ли найден hero в списке
         boolean heroWasFounded = false;
 
-        for (Hero currentHero : heroesList)
+        for (Hero currentHero : data)
             if (currentHero.getId().equals(hero.getId())) {
                 heroWasFounded = true;
 
-                heroesList.remove(currentHero);
+                data.remove(currentHero);
                 update(hero);
                 break;
             }
@@ -70,39 +69,7 @@ public class HeroRepository extends AbstractRepository implements BKRepository<H
         }
     }
 
-    public void deleteById(UUID heroId) throws Exception {
-        // флаг, был ли найден hero в списке
-        boolean heroWasFounded = false;
-        for (Hero currentHero : heroesList)
-            if (currentHero.getId().equals(heroId)) {
-                heroWasFounded = true;
-
-                heroesList.remove(currentHero);
-
-                break;
-            }
-        if (!heroWasFounded) {
-            throw new Exception("Cannot find the item");
-        }
-    }
-
-    public void removeByName(String nameHero) throws Exception {
-        // флаг, был ли найден hero в списке
-        boolean heroWasFounded = false;
-        for (Hero currentHero : heroesList)
-            if (currentHero.getName().equals(nameHero)) {
-                heroWasFounded = true;
-
-                heroesList.remove(currentHero);
-
-                break;
-            }
-        if (!heroWasFounded) {
-            throw new Exception("Cannot find the item");
-        }
-    }
-
-    public static String getSaveFileName() {
-        return "heroesList";
+    public String getSaveFileName() {
+        return "data";
     }
 }

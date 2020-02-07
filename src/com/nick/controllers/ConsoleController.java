@@ -2,6 +2,9 @@ package com.nick.controllers;
 
 import com.google.gson.Gson;
 import com.nick.dao.entities.Item;
+import com.nick.dao.repositories.BuildRepository;
+import com.nick.dao.repositories.HeroRepository;
+import com.nick.dao.repositories.ItemRepository;
 import com.nick.dao.services.BuildService;
 import com.nick.dao.services.HeroService;
 import com.nick.dao.services.ItemService;
@@ -23,6 +26,9 @@ public class ConsoleController {
 
     // это входная точка программы, а так же метод служит для выбора пользователем раздела в котором он будет выполнять действия
     public static void main(String[] args) throws Exception {
+        buildService = new BuildService(new BuildRepository());
+        heroService = new HeroService(new HeroRepository());
+        itemService = new ItemService(new ItemRepository());
 
         while (true) {
             // ввод команды юзера
@@ -196,7 +202,7 @@ public class ConsoleController {
         System.out.println("enter the NAME of new ITEM");
         String itemName = reader.readLine().toLowerCase();
 
-        itemService.add(new Item(itemName));
+        itemService.add(itemName);
     }
 
     private static void showItems() throws Exception {

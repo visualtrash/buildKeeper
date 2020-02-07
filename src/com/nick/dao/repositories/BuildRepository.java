@@ -2,17 +2,13 @@ package com.nick.dao.repositories;
 
 import com.nick.dao.entities.Build;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class BuildRepository extends AbstractRepository implements BKRepository<Build> {
-    private List<Build> buildList = new ArrayList<>();
-
-
-    public Optional get(String name) {
-        for (Build build : buildList) {
+public class BuildRepository extends AbstractRepository<Build> {
+    public Optional<Build> get(String name) {
+        for (Build build : data) {
             if (build.getName().equals(name)) {
                 return Optional.of(build);
             }
@@ -21,11 +17,11 @@ public class BuildRepository extends AbstractRepository implements BKRepository<
     }
 
     public List getAll() {
-        return buildList;
+        return data;
     }
 
     public Optional<Build> get(UUID id) {
-        for (Build build : buildList) {
+        for (Build build : data) {
             if (build.getId().equals(id)) {
                 return Optional.of(build);
             }
@@ -34,7 +30,7 @@ public class BuildRepository extends AbstractRepository implements BKRepository<
     }
 
 
-    public void update(Build buildToUpdate) throws Exception {
+    public void update(Build buildToUpdate) {
         Optional<Build> optionalBuild = get(buildToUpdate.getId());
 
         if (optionalBuild.isPresent()) {
@@ -49,8 +45,8 @@ public class BuildRepository extends AbstractRepository implements BKRepository<
     }
 
     //add build in List
-    public void add(Build build) throws Exception {
-        buildList.add(build);
+    public void add(Build build) {
+        data.add(build);
         update(build);
     }
 
@@ -58,11 +54,11 @@ public class BuildRepository extends AbstractRepository implements BKRepository<
         // флаг, был ли найден build в списке
         boolean buildWasFounded = false;
 
-        for (Build currentBuild : buildList)
+        for (Build currentBuild : data)
             if (currentBuild.getId().equals(build.getId())) {
                 buildWasFounded = true;
 
-                buildList.remove(currentBuild);
+                data.remove(currentBuild);
                 update(build);
                 break;
             }
@@ -71,7 +67,7 @@ public class BuildRepository extends AbstractRepository implements BKRepository<
         }
     }
 
-    public static String getSaveFileName() {
+    public String getSaveFileName() {
         return "buildsList";
     }
 }

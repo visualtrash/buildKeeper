@@ -3,11 +3,15 @@ package com.nick.dao.entities;
 import java.util.UUID;
 
 public abstract class BKEntity {
-    private UUID id;
+    private UUID id = UUID.randomUUID();
     private String name;
 
+    BKEntity(String name) {
+        this.name = name;
+    }
+
     BKEntity() {
-        id = UUID.randomUUID();
+
     }
 
     public UUID getId() {

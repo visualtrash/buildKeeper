@@ -4,6 +4,8 @@ public class Hero extends BKEntity {
     private String position;
 
     public Hero(String name, String position) {
+        super(name);
+
         this.position = position;
     }
 

@@ -1,10 +1,12 @@
 package com.nick.dao.repositories;
 
+import com.nick.dao.entities.Rune;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class RuneRepository implements BKRepository {
+public class RuneRepository extends AbstractRepository<Rune> {
     public Optional get(UUID id) {
         return Optional.empty();
     }
@@ -30,5 +32,10 @@ public class RuneRepository implements BKRepository {
 
     public void delete(Object o) {
 
+    }
+
+    @Override
+    String getSaveFileName() {
+        return "runes";
     }
 }
