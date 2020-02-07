@@ -3,7 +3,9 @@ package com.nick.dao.services;
 import com.nick.dao.entities.Hero;
 import com.nick.dao.repositories.HeroRepository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class HeroService {
 
@@ -17,10 +19,10 @@ public class HeroService {
         heroRepository.add(hero);
     }
 
-    public void remove(Hero hero) throws Exception {
-        heroRepository.delete(hero);
-    }
 
+    public void removeById(UUID itemId) throws Exception {
+        heroRepository.deleteById(itemId);
+    }
 
     public void setHeroPosition(Hero hero, String position) throws Exception {
         Optional<Hero> optionalHero = heroRepository.get(hero.getName());
@@ -30,5 +32,13 @@ public class HeroService {
             hero1.setPosition(position);
             heroRepository.update(hero1);
         }
+    }
+
+    public List getHeroList() {
+        return heroRepository.getAll();
+    }
+
+    public Optional getHeroById(UUID heroId) throws Exception {
+        return heroRepository.get(heroId);
     }
 }
