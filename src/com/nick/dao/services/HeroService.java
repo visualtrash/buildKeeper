@@ -15,16 +15,7 @@ public class HeroService {
         this.heroRepository = heroRepository;
     }
 
-    public void add(Hero hero) throws Exception {
-        heroRepository.add(hero);
-    }
-
-
-    public void removeById(UUID itemId) throws Exception {
-        heroRepository.deleteById(itemId);
-    }
-
-    public void setHeroPosition(Hero hero, String position) throws Exception {
+    public void setHeroPosition(Hero hero, String position) {
         Optional<Hero> optionalHero = heroRepository.get(hero.getName());
 
         if (optionalHero.isPresent()) {
@@ -34,11 +25,26 @@ public class HeroService {
         }
     }
 
+    public void add(Hero hero) throws Exception {
+        heroRepository.add(hero);
+    }
+
+
+    public void removeById(UUID heroId) throws Exception {
+        heroRepository.deleteById(heroId);
+    }
+
+
+
     public List getHeroList() {
         return heroRepository.getAll();
     }
 
     public Optional getHeroById(UUID heroId) throws Exception {
         return heroRepository.get(heroId);
+    }
+
+    public void add(String heroName, String heroPosition) throws Exception {
+        heroRepository.add(new Hero(heroName, heroPosition));
     }
 }

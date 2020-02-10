@@ -29,6 +29,7 @@ public class ItemRepository extends AbstractRepository<Item> {
     public void add(Item item) throws Exception {
         data.add(item);
         persist();
+        System.out.println("successful added");
     }
 
     public void update(Item itemToUpdate) throws Exception {
@@ -42,6 +43,6 @@ public class ItemRepository extends AbstractRepository<Item> {
     }
 
     public String getSaveFileName() {
-        return "data";
+        return "items";
     }
 }

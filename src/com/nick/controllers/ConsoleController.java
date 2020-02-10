@@ -1,6 +1,7 @@
 package com.nick.controllers;
 
 import com.google.gson.Gson;
+import com.nick.dao.entities.Hero;
 import com.nick.dao.entities.Item;
 import com.nick.dao.repositories.BuildRepository;
 import com.nick.dao.repositories.HeroRepository;
@@ -92,22 +93,19 @@ public class ConsoleController {
 
         switch (userHeroCommand) {
             case Commands.ADD_COMMAND:
-
+                createHero();
                 break;
             case Commands.REMOVE_COMMAND:
-                System.out.println("GET ALL heroes(-g) or GET BY NAME(-gn)");
-                String userGetCommand = reader.readLine().toLowerCase();
-
                 removeHero();
                 break;
             case Commands.GET_ALL_COMMAND:
-                heroService.getHeroList();
+                showHeroes();
                 break;
             case Commands.GET_BY_ID_COMMAND:
                 System.out.println("enter the ID of HERO");
                 UUID userHeroId = UUID.fromString(reader.readLine());
 
-                heroService.getHeroById(userHeroId);
+                showHeroesById(userHeroId);
                 break;
             case Commands.EXIT_COMMAND:
                 // выходим из раздела
@@ -132,7 +130,7 @@ public class ConsoleController {
                     removeBuild();
                     break;
                 case Commands.GET_ALL_COMMAND:
-
+                    showHeroes();
                     break;
                 case Commands.GET_BY_ID_COMMAND:
 
@@ -211,7 +209,7 @@ public class ConsoleController {
         System.out.println(itemListAsString);
     }
 
-    private static void showItemsById(UUID itemId) throws Exception {
+    private static void showItemsById(UUID itemId) {
         List<Item> list = itemService.getItemList();
         for (Item eachItem : list) {
             if (eachItem.getId().equals(itemId)) {
@@ -229,10 +227,36 @@ public class ConsoleController {
         itemService.removeById(userItemRemoveId);
     }
 
+    private static void createHero() throws Exception {
+        System.out.println("enter the NAME of new HERO");
+        String heroName = reader.readLine().toLowerCase();
+        System.out.println("enter the POSITION of new HERO");
+        String heroPosition = reader.readLine().toLowerCase();
+
+        heroService.add(heroName, heroPosition);
+    }
+
     private static void removeHero() throws Exception {
         System.out.println("enter the ID of HERO for REMOVE");
         UUID userHeroRemoveId = UUID.fromString(reader.readLine());
 
         heroService.removeById(userHeroRemoveId);
+    }
+
+    private static void showHeroes() throws Exception {
+        Gson gson = new Gson();
+        String heroListAsString = gson.toJson(heroService.getHeroList());
+        System.out.println(heroListAsString);
+    }
+
+    private static void showHeroesById(UUID heroId) {
+        List<Hero> list = heroService.getHeroList();
+        for (Hero eachHero : list) {
+            if (eachHero.getId().equals(heroId)) {
+                Gson gson = new Gson();
+                String heroAsString = gson.toJson(eachHero);
+                System.out.println(heroAsString);
+            }
+        }
     }
 }

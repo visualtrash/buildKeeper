@@ -68,6 +68,6 @@ public class BuildRepository extends AbstractRepository<Build> {
     }
 
     public String getSaveFileName() {
-        return "buildsList";
+        return "builds";
     }
 }

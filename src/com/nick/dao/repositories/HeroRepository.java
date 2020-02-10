@@ -2,7 +2,7 @@ package com.nick.dao.repositories;
 
 import com.nick.dao.entities.Hero;
 
-import java.util.List;
+import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,17 +26,11 @@ public class HeroRepository extends AbstractRepository<Hero> {
         return Optional.empty();
     }
 
-    public List getAll() {
-        for (Hero heroOfList : data) {
-            System.out.println(heroOfList.getName());
-        }
-        return data;
-    }
-
     //add hero in List
-    public void add(Hero hero) {
+    public void add(Hero hero) throws IOException {
         data.add(hero);
-        update(hero);
+        persist();
+        System.out.println("successful added");
     }
 
     public void update(Hero heroToUpdate) {
@@ -50,7 +44,6 @@ public class HeroRepository extends AbstractRepository<Hero> {
         } else System.out.println("item not found(null)");
 
     }
-
 
     public void delete(Hero hero) throws Exception {
         // флаг, был ли найден hero в списке
@@ -70,6 +63,6 @@ public class HeroRepository extends AbstractRepository<Hero> {
     }
 
     public String getSaveFileName() {
-        return "data";
+        return "heroes";
     }
 }

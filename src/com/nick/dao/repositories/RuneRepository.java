@@ -34,8 +34,7 @@ public class RuneRepository extends AbstractRepository<Rune> {
 
     }
 
-    @Override
-    String getSaveFileName() {
+    public String getSaveFileName() {
         return "runes";
     }
 }

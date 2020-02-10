@@ -87,7 +87,7 @@ public abstract class AbstractRepository<T extends BKEntity> {
     }
 
     public void deleteById(UUID id) throws Exception {
-        // флаг, был ли найден hero в списке
+        // флаг, был ли найден entity в списке
         boolean wasFounded = false;
         for (T currentEntity : data)
             if (currentEntity.getId().equals(id)) {
@@ -103,7 +103,7 @@ public abstract class AbstractRepository<T extends BKEntity> {
     }
 
     public void deleteByName(String name) throws Exception {
-        // флаг, был ли найден hero в списке
+        // флаг, был ли найден entity в списке
         boolean wasFounded = false;
         for (T currentEntity : data)
             if (currentEntity.getName().equals(name)) {
