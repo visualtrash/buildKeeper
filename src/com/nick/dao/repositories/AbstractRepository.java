@@ -1,7 +1,6 @@
 package com.nick.dao.repositories;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.nick.dao.entities.BKEntity;
 
 import java.io.*;
@@ -21,54 +20,44 @@ public abstract class AbstractRepository<T extends BKEntity> {
         load();
     }
 
-    public static String readFile(String path) throws IOException {
-        byte[] encoded = Files.readAllBytes(Paths.get(path));
-        return new String(encoded, StandardCharsets.US_ASCII);
-    }
-
     abstract String getSaveFileName();
+    abstract Type getRepositoryEntityListType();
 
     public void persist() throws IOException {
-        // create space on disk for save
         String buildListJson = new Gson().toJson(data);
 
-        File file = new File("\\BuildKeeper\\saveData\\" + getSaveFileName() + ".json");
+        File file = new File("\\saveData\\" + getSaveFileName() + ".json");
 
         if (!file.exists()) {
-            boolean mkdirs = file.getParentFile().mkdirs();
-            boolean newFile = file.createNewFile();
+            new File("\\saveData").mkdirs();
+            file.createNewFile();
         }
 
         FileOutputStream fileOutputStream = new FileOutputStream(file);
-        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
-        bufferedWriter.write(buildListJson);
-        bufferedWriter.close();
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream))) {
+            bufferedWriter.write(buildListJson);
+        }
     }
-
-    public List<T> getAll() {
-        return data;
+    private static String readFile(String path) throws IOException {
+        byte[] encoded = Files.readAllBytes(Paths.get(path));
+        return new String(encoded, StandardCharsets.US_ASCII);
     }
-
-    //load from disk
-    public void load() {
-        File file = new File("\\BuildKeeper\\saveData\\" + getSaveFileName() + ".json");
+    private void load() {
+        File file = new File("\\saveData\\" + getSaveFileName() + ".json");
 
         if (file.exists()) {
             String stringJson = "";
             try {
                 stringJson = readFile(file.getPath());
-                Gson gson = new Gson();
 
-                Type collectionType = new TypeToken<List<T>>() {
-                }.getType();
-                data = gson.fromJson(stringJson, collectionType);
+                data = new Gson().fromJson(stringJson, getRepositoryEntityListType());
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-
+    public List<T> getAll(){return data;}
     public void delete(T entity) throws Exception {
         // флаг, был ли найден hero в списке
         boolean wasFounded = false;
@@ -85,7 +74,6 @@ public abstract class AbstractRepository<T extends BKEntity> {
             throw new Exception("Cannot find the item");
         }
     }
-
     public void deleteById(UUID id) throws Exception {
         // флаг, был ли найден entity в списке
         boolean wasFounded = false;
@@ -101,7 +89,6 @@ public abstract class AbstractRepository<T extends BKEntity> {
             throw new Exception("Cannot find the entity with id " + id);
         }
     }
-
     public void deleteByName(String name) throws Exception {
         // флаг, был ли найден entity в списке
         boolean wasFounded = false;

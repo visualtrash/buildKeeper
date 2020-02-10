@@ -1,7 +1,10 @@
 package com.nick.dao.repositories;
 
+import com.google.gson.reflect.TypeToken;
 import com.nick.dao.entities.Build;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -67,7 +70,13 @@ public class BuildRepository extends AbstractRepository<Build> {
         }
     }
 
+    @Override
     public String getSaveFileName() {
         return "builds";
+    }
+
+    @Override
+    Type getRepositoryEntityListType() {
+        return new TypeToken<ArrayList<Build>>(){}.getType();
     }
 }

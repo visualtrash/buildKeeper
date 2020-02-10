@@ -1,8 +1,12 @@
 package com.nick.dao.repositories;
 
+import com.google.gson.reflect.TypeToken;
 import com.nick.dao.entities.Hero;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -45,24 +49,13 @@ public class HeroRepository extends AbstractRepository<Hero> {
 
     }
 
-    public void delete(Hero hero) throws Exception {
-        // флаг, был ли найден hero в списке
-        boolean heroWasFounded = false;
-
-        for (Hero currentHero : data)
-            if (currentHero.getId().equals(hero.getId())) {
-                heroWasFounded = true;
-
-                data.remove(currentHero);
-                update(hero);
-                break;
-            }
-        if (!heroWasFounded) {
-            throw new Exception("Cannot find the hero");
-        }
-    }
-
+    @Override
     public String getSaveFileName() {
         return "heroes";
+    }
+
+    @Override
+    Type getRepositoryEntityListType() {
+        return new TypeToken<ArrayList<Hero>>(){}.getType();
     }
 }

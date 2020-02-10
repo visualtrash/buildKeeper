@@ -1,7 +1,10 @@
 package com.nick.dao.repositories;
 
+import com.google.gson.reflect.TypeToken;
 import com.nick.dao.entities.Item;
 
+import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,7 +45,13 @@ public class ItemRepository extends AbstractRepository<Item> {
         } else System.out.println("item not found(null)");
     }
 
+    @Override
     public String getSaveFileName() {
         return "items";
+    }
+
+    @Override
+    Type getRepositoryEntityListType() {
+        return new TypeToken<List<Item>>(){}.getType();
     }
 }
