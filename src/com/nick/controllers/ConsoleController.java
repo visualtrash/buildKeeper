@@ -11,6 +11,7 @@ import com.nick.dao.services.HeroService;
 import com.nick.dao.services.ItemService;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,6 @@ public class ConsoleController {
                     break;
             }
         }
-
     }
 
     // в этом методе мы обрабатываем все пользовательские действия над итемами
@@ -72,10 +72,7 @@ public class ConsoleController {
                 showItems();
                 break;
             case Commands.GET_BY_ID_COMMAND:
-                System.out.println("enter the ID of ITEM");
-                UUID userItemId = UUID.fromString(reader.readLine());
-
-                showItemsById(userItemId);
+                showItemsById();
                 break;
             case Commands.EXIT_COMMAND:
                 // выходим из раздела
@@ -209,7 +206,11 @@ public class ConsoleController {
         System.out.println(itemListAsString);
     }
 
-    private static void showItemsById(UUID itemId) {
+    private static void showItemsById() throws IOException {
+
+        System.out.println("enter the ID of ITEM");
+        UUID itemId = UUID.fromString(reader.readLine());
+
         List<Item> list = itemService.getItemList();
         for (Item eachItem : list) {
             if (eachItem.getId().equals(itemId)) {
