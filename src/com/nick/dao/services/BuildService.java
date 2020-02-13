@@ -18,9 +18,16 @@ public class BuildService {
         this.buildRepository = buildRepository;
     }
 
+    public List getBuildList() {
+        return buildRepository.getAll();
+    }
 
     public void add(Build build) throws Exception {
         buildRepository.add(build);
+    }
+
+    public void removeById(UUID buildId) throws Exception {
+        buildRepository.deleteById(buildId);
     }
 
     public void remove(Build build) throws Exception {

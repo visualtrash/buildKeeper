@@ -42,7 +42,8 @@ public abstract class AbstractRepository<T extends BKEntity> {
         byte[] encoded = Files.readAllBytes(Paths.get(path));
         return new String(encoded, StandardCharsets.US_ASCII);
     }
-    private void load() {
+
+    public void load() {
         File file = new File("\\saveData\\" + getSaveFileName() + ".json");
 
         if (file.exists()) {

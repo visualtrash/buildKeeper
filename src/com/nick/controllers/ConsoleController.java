@@ -1,14 +1,17 @@
 package com.nick.controllers;
 
 import com.google.gson.Gson;
+import com.nick.dao.entities.Build;
 import com.nick.dao.entities.Hero;
 import com.nick.dao.entities.Item;
+import com.nick.dao.entities.Rune;
 import com.nick.dao.repositories.BuildRepository;
 import com.nick.dao.repositories.HeroRepository;
 import com.nick.dao.repositories.ItemRepository;
 import com.nick.dao.services.BuildService;
 import com.nick.dao.services.HeroService;
 import com.nick.dao.services.ItemService;
+import com.nick.enums.Ability;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -99,10 +102,7 @@ public class ConsoleController {
                 showHeroes();
                 break;
             case Commands.GET_BY_ID_COMMAND:
-                System.out.println("enter the ID of HERO");
-                UUID userHeroId = UUID.fromString(reader.readLine());
-
-                showHeroesById(userHeroId);
+                showHeroesById();
                 break;
             case Commands.EXIT_COMMAND:
                 // выходим из раздела
@@ -115,40 +115,43 @@ public class ConsoleController {
 
     // в этом методе мы обрабатываем все пользовательские действия над билдами
     private static void editBuilds() throws Exception {
-        while (true) {
-            System.out.println("What do you want to do with BUILD? ADD(-a) / UPDATE(-u) / REMOVE(-r) / SHOW all BUILDS(-g) / SHOW BUILD by id(-gid)");
-            String userBuildCommand = reader.readLine().toLowerCase();
+        System.out.println("What do you want to do with BUILD? ADD(-a) / UPDATE(-u) / REMOVE(-r) / SHOW all BUILDS(-g) / SHOW BUILD by id(-gid)");
+        String userBuildCommand = reader.readLine().toLowerCase();
 
-            switch (userBuildCommand) {
-                case Commands.ADD_COMMAND:
-                    createBuild();
-                    break;
-                case Commands.REMOVE_COMMAND:
-                    removeBuild();
-                    break;
-                case Commands.GET_ALL_COMMAND:
-                    showHeroes();
-                    break;
-                case Commands.GET_BY_ID_COMMAND:
-
-                    break;
-                case Commands.UPDATE_COMMAND:
-                    updateBuild();
-                    break;
-                case Commands.EXIT_COMMAND:
-                    // выходим из раздела
-                    return;
-                default:
-                    System.out.println("Unknown command :(");
-                    break;
-            }
+        switch (userBuildCommand) {
+            case Commands.ADD_COMMAND:
+                createBuild();
+                break;
+            case Commands.REMOVE_COMMAND:
+                removeBuild();
+                break;
+            case Commands.GET_ALL_COMMAND:
+                showBuilds();
+                break;
+            case Commands.GET_BY_ID_COMMAND:
+                showBuildsById();
+                break;
+            case Commands.UPDATE_COMMAND:
+                updateBuild();
+                break;
+            case Commands.EXIT_COMMAND:
+                // выходим из раздела
+                return;
+            default:
+                System.out.println("Unknown command :(");
+                break;
         }
+
     }
 
     private static void updateBuild() {
     }
 
-    private static void removeBuild() {
+    private static void removeBuild() throws Exception {
+        System.out.println("enter the ID of BUILD for REMOVE");
+        UUID userBuildRemoveId = UUID.fromString(reader.readLine());
+
+        buildService.removeById(userBuildRemoveId);
     }
 
     // метод спрашивает у пользователя все необходимое для добавления билда
@@ -161,7 +164,7 @@ public class ConsoleController {
         System.out.println("enter the POSITION of HERO");
         String userHeroPosition = reader.readLine();
 
-        List<String> userBuildItems = new ArrayList<>();
+        List<Item> userBuildItems = new ArrayList<>();
 
         // цикл для ввода массива итемов
         itemsEnterCycle:
@@ -169,7 +172,7 @@ public class ConsoleController {
             System.out.println("enter the NAME of ITEM");
             String itemName = reader.readLine();
 
-            userBuildItems.add(itemName);
+            userBuildItems.add(new Item(itemName));
 
             // цикл для спрашивания "добавить еще?"
             String oneMoreItemName = "y";
@@ -188,11 +191,44 @@ public class ConsoleController {
             }
         }
 
+        List<Ability> abilities = new ArrayList<>();
+        // цикл для ввода массива умений
+        for (int i = 1; i < 3; i++) {
+            System.out.println("enter the ABILITY on " + i + " lvl (Q / W / E / R)");
+            String userAbility = reader.readLine().toUpperCase();
 
-        //buildService.add(userBuildName, userHeroName, userHeroPosition, userBuildItems);
+            if (i < 2 && userAbility.equals(Ability.R)) {
+                System.out.println("error. R ability is available after 6 lvl :(");
+                break;
+            } else {
+                switch (userAbility) {
+                    case "Q":
+                        abilities.add(Ability.Q);
+                        break;
+                    case "W":
+                        abilities.add(Ability.W);
+                        break;
+                    case "E":
+                        abilities.add(Ability.E);
+                        break;
+                    case "R":
+                        abilities.add(Ability.R);
+                        break;
+                    default:
+                        System.out.println("Unknown command :(");
+                        break;
+                }
+            }
+        }
+        buildService.add(new Build(userBuildName, new Hero(userHeroName, userHeroPosition), userBuildItems, new Rune(), abilities));
     }
 
-    //exc
+    private static void showBuilds() {
+        Gson gson = new Gson();
+        String buildAsString = gson.toJson(buildService.getBuildList());
+        System.out.println(buildAsString);
+    }
+
     private static void createItem() throws Exception {
         System.out.println("enter the NAME of new ITEM");
         String itemName = reader.readLine().toLowerCase();
@@ -200,7 +236,7 @@ public class ConsoleController {
         itemService.add(itemName);
     }
 
-    private static void showItems() throws Exception {
+    private static void showItems() {
         Gson gson = new Gson();
         String itemListAsString = gson.toJson(itemService.getItemList());
         System.out.println(itemListAsString);
@@ -244,19 +280,36 @@ public class ConsoleController {
         heroService.removeById(userHeroRemoveId);
     }
 
-    private static void showHeroes() throws Exception {
+    private static void showHeroes() {
         Gson gson = new Gson();
         String heroListAsString = gson.toJson(heroService.getHeroList());
         System.out.println(heroListAsString);
     }
 
-    private static void showHeroesById(UUID heroId) {
+    private static void showHeroesById() throws IOException {
+        System.out.println("enter the ID of HERO");
+        UUID heroId = UUID.fromString(reader.readLine());
+
         List<Hero> list = heroService.getHeroList();
         for (Hero eachHero : list) {
             if (eachHero.getId().equals(heroId)) {
                 Gson gson = new Gson();
                 String heroAsString = gson.toJson(eachHero);
                 System.out.println(heroAsString);
+            }
+        }
+    }
+
+    private static void showBuildsById() throws IOException {
+        System.out.println("enter the ID of BUILD");
+        UUID buildId = UUID.fromString(reader.readLine());
+
+        List<Build> list = buildService.getBuildList();
+        for (Build eachBuild : list) {
+            if (eachBuild.getId().equals(buildId)) {
+                Gson gson = new Gson();
+                String buildAsString = gson.toJson(eachBuild);
+                System.out.println(buildAsString);
             }
         }
     }
