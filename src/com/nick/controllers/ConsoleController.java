@@ -144,7 +144,37 @@ public class ConsoleController {
 
     }
 
-    private static void updateBuild() {
+    private static void updateBuild() throws IOException {
+        System.out.println("What do you want to EDIT in BUILD? HERO(h) / ITEM(i)");
+        String userUpdateBuildCommand = reader.readLine().toLowerCase();
+
+        switch (userUpdateBuildCommand) {
+            case Commands.HERO_COMMAND:
+                System.out.println("What do you want to EDIT in HERO? position(p) / name(n)");
+                String userHeroCommand = reader.readLine().toLowerCase();
+                switch (userHeroCommand) {
+                    case "p":
+                        System.out.println("enter the new POSITION of HERO");
+                        String userHeroPosition = reader.readLine().toLowerCase();
+                        findBuild().getHero().setPosition(userHeroPosition);
+                        break;
+                    case "n":
+                        System.out.println("enter the new NAME of HERO");
+                        String userHeroName = reader.readLine().toLowerCase();
+                        findBuild().getHero().setName(userHeroName);
+                    default:
+                        System.out.println("Unknown command :(");
+                        break;
+                }
+                break;
+            case Commands.ITEM_COMMAND:
+                System.out.println("enter the ID of ITEM to EDIT items");
+                editItem();
+                break;
+            default:
+                System.out.println("Unknown command :(");
+                break;
+        }
     }
 
     private static void removeBuild() throws Exception {
@@ -313,4 +343,40 @@ public class ConsoleController {
             }
         }
     }
+
+    private static Build findBuild() throws IOException {
+        System.out.println("enter the ID of BUILD");
+        UUID buildId = UUID.fromString(reader.readLine());
+        Build build = null;
+
+        List<Build> list = buildService.getBuildList();
+        for (Build build1 : list) {
+            if (build1.getId().equals(buildId)) {
+                build = build1;
+            } else System.out.println("cannot find build :(");
+        }
+        return build;
+    }
+
+    private static Item getItemFromBuildItemList() throws IOException {
+        System.out.println("enter the ID of ITEM");
+        UUID itemId = UUID.fromString(reader.readLine());
+        Item item = null;
+
+        List<Item> list = findBuild().getItems();
+        for (Item item1 : list) {
+            if (item1.getId().equals(itemId)) {
+                item = item1;
+            } else System.out.println("cannot find item :(");
+        }
+        return item;
+    }
+
+    private static void editItem() throws IOException {
+        System.out.println("enter the new NAME of ITEM");
+        String userItemName = reader.readLine().toLowerCase();
+
+        getItemFromBuildItemList().setName(userItemName);
+    }
 }
+
