@@ -14,10 +14,6 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
-    public void add(Item item) throws Exception {
-        itemRepository.add(item);
-    }
-
     public void add(String itemName) throws Exception {
         itemRepository.add(new Item(itemName));
     }
