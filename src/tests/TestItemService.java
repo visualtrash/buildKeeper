@@ -1,8 +1,8 @@
-package com.nick.dao.test;
+package tests;
 
-import com.nick.dao.entities.Item;
-import com.nick.dao.repositories.ItemRepository;
-import com.nick.dao.services.ItemService;
+import com.nick.dal.entities.Item;
+import com.nick.dal.repositories.ItemRepository;
+import com.nick.services.ItemService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

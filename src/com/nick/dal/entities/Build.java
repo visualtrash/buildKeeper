@@ -1,4 +1,4 @@
-package com.nick.dao.entities;
+package com.nick.dal.entities;
 
 import com.nick.enums.Ability;
 
@@ -7,17 +7,28 @@ import java.util.List;
 public class Build extends BKEntity {
 
     private Hero hero;
+    private String heroPosition;
     private List<Item> items;
     private Rune rune;
     private List<Ability> abilities;
 
-    public Build(String name, Hero hero, List<Item> items, Rune rune, List<Ability> ability) {
+    public Build(String name, Hero hero, List<Item> items, Rune rune, List<Ability> ability, String heroPosition) {
         super(name);
 
         this.hero = hero;
         this.items = items;
         this.rune = rune;
         this.abilities = ability;
+        this.heroPosition = heroPosition;
+    }
+
+
+    public String getHeroPosition() {
+        return heroPosition;
+    }
+
+    public void setHeroPosition(String position) {
+        this.heroPosition = position;
     }
 
     public Hero getHero() {

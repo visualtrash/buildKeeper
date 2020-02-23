@@ -1,7 +1,7 @@
-package com.nick.dao.repositories;
+package com.nick.dal.repositories;
 
 import com.google.gson.reflect.TypeToken;
-import com.nick.dao.entities.Rune;
+import com.nick.dal.entities.Rune;
 
 import java.lang.reflect.Type;
 import java.util.List;

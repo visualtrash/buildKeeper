@@ -1,17 +1,17 @@
 package com.nick.controllers;
 
 import com.google.gson.Gson;
-import com.nick.dao.entities.Build;
-import com.nick.dao.entities.Hero;
-import com.nick.dao.entities.Item;
-import com.nick.dao.entities.Rune;
-import com.nick.dao.repositories.BuildRepository;
-import com.nick.dao.repositories.HeroRepository;
-import com.nick.dao.repositories.ItemRepository;
-import com.nick.dao.services.BuildService;
-import com.nick.dao.services.HeroService;
-import com.nick.dao.services.ItemService;
+import com.nick.dal.entities.Build;
+import com.nick.dal.entities.Hero;
+import com.nick.dal.entities.Item;
+import com.nick.dal.entities.Rune;
+import com.nick.dal.repositories.BuildRepository;
+import com.nick.dal.repositories.HeroRepository;
+import com.nick.dal.repositories.ItemRepository;
 import com.nick.enums.Ability;
+import com.nick.services.BuildService;
+import com.nick.services.HeroService;
+import com.nick.services.ItemService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -150,26 +150,30 @@ public class ConsoleController {
 
         switch (userUpdateBuildCommand) {
             case Commands.HERO_COMMAND:
-                System.out.println("What do you want to EDIT in HERO? POSITION(p) / NAME(n)");
-                String userHeroCommand = reader.readLine().toLowerCase();
-                switch (userHeroCommand) {
-                    case "p":
-                        System.out.println("enter the new POSITION of HERO");
-                        String userHeroPosition = reader.readLine().toLowerCase();
-                        findBuild().getHero().setPosition(userHeroPosition);
-                        break;
-                    case "n":
-                        System.out.println("enter the new NAME of HERO");
-                        String userHeroName = reader.readLine().toLowerCase();
-                        findBuild().getHero().setName(userHeroName);
-                        break;
-                    default:
-                        System.out.println("Unknown command :(");
-                        break;
-                }
+                updateBuildHero();
                 break;
             case Commands.ITEM_COMMAND:
                 editItemsOfBuild();
+                break;
+            default:
+                System.out.println("Unknown command :(");
+                break;
+        }
+    }
+
+    private static void updateBuildHero() throws IOException {
+        System.out.println("What do you want to EDIT in HERO? POSITION(p) / NAME(n)");
+        String userHeroCommand = reader.readLine().toLowerCase();
+        switch (userHeroCommand) {
+            case "p":
+                System.out.println("enter the new POSITION of HERO");
+                String userHeroPosition = reader.readLine().toLowerCase();
+                findBuild().setHeroPosition(userHeroPosition);
+                break;
+            case "n":
+                System.out.println("enter the new NAME of HERO");
+                String userHeroName = reader.readLine().toLowerCase();
+                findBuild().getHero().setName(userHeroName);
                 break;
             default:
                 System.out.println("Unknown command :(");
@@ -250,7 +254,7 @@ public class ConsoleController {
                 }
             }
         }
-        buildService.add(new Build(userBuildName, new Hero(userHeroName, userHeroPosition), userBuildItems, new Rune(), abilities));
+        buildService.add(userBuildName, new Hero(userHeroName), userBuildItems, new Rune(), abilities, userHeroPosition);
     }
 
     private static void showBuilds() {
@@ -297,10 +301,8 @@ public class ConsoleController {
     private static void createHero() throws Exception {
         System.out.println("enter the NAME of new HERO");
         String heroName = reader.readLine().toLowerCase();
-        System.out.println("enter the POSITION of new HERO");
-        String heroPosition = reader.readLine().toLowerCase();
 
-        heroService.add(heroName, heroPosition);
+        heroService.add(heroName);
     }
 
     private static void removeHero() throws Exception {

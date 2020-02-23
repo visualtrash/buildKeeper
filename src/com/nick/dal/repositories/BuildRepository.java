@@ -1,7 +1,7 @@
-package com.nick.dao.repositories;
+package com.nick.dal.repositories;
 
 import com.google.gson.reflect.TypeToken;
-import com.nick.dao.entities.Build;
+import com.nick.dal.entities.Build;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -40,6 +40,7 @@ public class BuildRepository extends AbstractRepository<Build> {
             Build build1 = optionalBuild.get();
             build1.setName(buildToUpdate.getName());
             build1.setHero(buildToUpdate.getHero());
+            build1.setHeroPosition(buildToUpdate.getHeroPosition());
             build1.setAbilities(buildToUpdate.getAbilities());
             build1.setItems(buildToUpdate.getItems());
             build1.setRune(buildToUpdate.getRune());

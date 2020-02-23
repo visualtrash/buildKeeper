@@ -1,7 +1,7 @@
-package com.nick.dao.services;
+package com.nick.services;
 
-import com.nick.dao.entities.Item;
-import com.nick.dao.repositories.ItemRepository;
+import com.nick.dal.entities.Item;
+import com.nick.dal.repositories.ItemRepository;
 
 import java.util.List;
 import java.util.Optional;

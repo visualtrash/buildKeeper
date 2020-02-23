@@ -1,4 +1,4 @@
-package com.nick.dao.services;
+package com.nick.services;
 
 public class RuneService {
     public RuneService() {

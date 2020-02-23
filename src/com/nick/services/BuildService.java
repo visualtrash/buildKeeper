@@ -1,10 +1,11 @@
-package com.nick.dao.services;
+package com.nick.services;
 
-import com.nick.dao.entities.Build;
-import com.nick.dao.entities.Hero;
-import com.nick.dao.entities.Item;
-import com.nick.dao.entities.Rune;
-import com.nick.dao.repositories.BuildRepository;
+import com.nick.dal.entities.Build;
+import com.nick.dal.entities.Hero;
+import com.nick.dal.entities.Item;
+import com.nick.dal.entities.Rune;
+import com.nick.dal.repositories.BuildRepository;
+import com.nick.enums.Ability;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,8 +23,11 @@ public class BuildService {
         return buildRepository.getAll();
     }
 
-    public void add(Build build) throws Exception {
-        buildRepository.add(build);
+    public Build add(String userBuildName, Hero hero, List<Item> userBuildItems, Rune rune, List<Ability> abilities, String userHeroPosition) {
+        Build newBuild = new Build(userBuildName, hero, userBuildItems, rune, abilities, userHeroPosition);
+        buildRepository.add(newBuild);
+
+        return newBuild;
     }
 
     public void removeById(UUID buildId) throws Exception {
@@ -33,7 +37,6 @@ public class BuildService {
     public void remove(Build build) throws Exception {
         buildRepository.delete(build);
     }
-
 
     public void updateName(UUID id, String name) throws Exception {
         Optional<Build> optionalBuild = buildRepository.get(id);
@@ -59,6 +62,17 @@ public class BuildService {
             Build build1 = optionalBuild.get();
             build1.setHero(hero);
             buildRepository.update(build1);
+        }
+    }
+
+    public void setHeroPosition(UUID id, String position) {
+        Optional<Build> optionalBuild = buildRepository.get(id);
+
+        if (optionalBuild.isPresent()) {
+            Build build = optionalBuild.get();
+            build.setHeroPosition(position);
+
+            buildRepository.update(build);
         }
     }
 

@@ -1,4 +1,4 @@
-package com.nick.dao.entities;
+package com.nick.dal.entities;
 
 import java.util.UUID;
 

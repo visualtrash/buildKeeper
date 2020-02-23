@@ -1,12 +1,13 @@
-package com.nick.dao.repositories;
+package com.nick.dal.repositories;
 
 import com.google.gson.Gson;
-import com.nick.dao.entities.BKEntity;
+import com.nick.dal.entities.BKEntity;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,14 +27,14 @@ public abstract class AbstractRepository<T extends BKEntity> {
     public void persist() throws IOException {
         String buildListJson = new Gson().toJson(data);
 
-        File file = new File("\\saveData\\" + getSaveFileName() + ".json");
+        if (!Paths.get("saveData").toFile().exists())
+            Files.createDirectory(Paths.get("saveData"));
 
-        if (!file.exists()) {
-            new File("\\saveData").mkdirs();
-            file.createNewFile();
-        }
+        Path path = Paths.get("saveData\\" + getSaveFileName() + ".json");
+        if (!path.toFile().exists())
+            Files.createFile(path);
 
-        FileOutputStream fileOutputStream = new FileOutputStream(file);
+        FileOutputStream fileOutputStream = new FileOutputStream(path.toFile());
         try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream))) {
             bufferedWriter.write(buildListJson);
         }
@@ -44,7 +45,7 @@ public abstract class AbstractRepository<T extends BKEntity> {
     }
 
     public void load() {
-        File file = new File("\\saveData\\" + getSaveFileName() + ".json");
+        File file = Paths.get("saveData\\" + getSaveFileName() + ".json").toFile();
 
         if (file.exists()) {
             String stringJson = "";
