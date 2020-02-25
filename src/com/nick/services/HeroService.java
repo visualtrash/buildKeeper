@@ -27,6 +27,10 @@ public class HeroService {
         heroRepository.deleteById(heroId);
     }
 
+    public void removeByName(String heroName) throws Exception {
+        heroRepository.deleteByName(heroName);
+    }
+
     public List getHeroList() {
         return heroRepository.getAll();
     }
@@ -39,4 +43,12 @@ public class HeroService {
         return heroRepository.get(name);
     }
 
+    public void editHeroName(UUID id, String newName) {
+        List<Hero> list = heroRepository.getAll();
+        for (Hero eachHero : list) {
+            if (eachHero.getId().equals(id)) {
+                eachHero.setName(newName);
+            }
+        }
+    }
 }
