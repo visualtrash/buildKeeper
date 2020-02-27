@@ -20,13 +20,14 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class TestHeroService {
 
+    private static Path source = Paths.get("saveData");
+    private static Path newDir = Paths.get("saveData_temp");
+
+    private UUID setId = null;
+
     // мы хотим создать механизм переноса пользовательских данных во временную папку перед каждым тестом
-    @SuppressWarnings("Duplicates")
     @BeforeClass
     public static void prepareData() {
-        Path source = Paths.get("saveData");
-        Path newDir = Paths.get("saveData_temp");
-
         try {
             if (source.toFile().exists())
                 Files.move(source, newDir, REPLACE_EXISTING);
@@ -35,12 +36,9 @@ public class TestHeroService {
         }
     }
 
-    @SuppressWarnings("Duplicates")
+
     @AfterClass
     public static void moveBackData() {
-        Path source = Paths.get("saveData");
-        Path newDir = Paths.get("saveData_temp");
-
         try {
             if (newDir.toFile().exists())
                 Files.move(newDir, source, REPLACE_EXISTING);
@@ -63,20 +61,6 @@ public class TestHeroService {
             Assert.fail(e.toString());
         }
     }
-
-    // получение героя по id +
-    // 1. получить несуществуюшего героя
-    // 2. получить существуюшего героя
-    // получение всех героев +
-
-
-    // получение героя по имени +
-    // 1. получить несуществуюшего героя
-    // 2. получить существуюшего героя
-    // добавление героя в список +
-    // удаление героя из списка +
-    // изменение имени героя -
-
 
     @Test
     public void tryGetHeroByRandomId() {
@@ -125,11 +109,11 @@ public class TestHeroService {
     }
 
     @Test
-    public void tryGetNotExistHeroByName() {
-        HeroService service = new HeroService(new HeroRepository());
+    public void tryGetNonexistentHeroByName() {
+        HeroService heroService = new HeroService(new HeroRepository());
 
         String notExistHeroName = "notExistHeroName";
-        Optional heroByName = service.getHeroByName(notExistHeroName);
+        Optional heroByName = heroService.getHeroByName(notExistHeroName);
 
         // найденый результат не содержит героя внутри
         Assert.assertFalse(heroByName.isPresent());
@@ -137,71 +121,66 @@ public class TestHeroService {
 
     @Test
     public void tryGetHeroByName() {
-        HeroService service = new HeroService(new HeroRepository());
+        HeroService heroService = new HeroService(new HeroRepository());
 
+        addHero(heroService);
         try {
-            Hero newHero = service.add("newHero");
+            Optional<Hero> getHero = heroService.getHeroByName("heroName");
+            if (!getHero.get().getId().equals(setId)) {
+                Assert.fail();
+            }
 
-            Hero hero = service.getHeroByName(newHero.getName()).get();
-
-            Assert.assertEquals(hero.getName(), newHero.getName());
-            Assert.assertEquals(hero.getId(), newHero.getId());
         } catch (Exception e) {
             Assert.fail(e.toString());
         }
     }
 
     @Test
-    public void tryAddItem() {
-        HeroRepository heroRepository = new HeroRepository();
+    public void tryAddHero() {
+        HeroService heroService = new HeroService(new HeroRepository());
 
-        Hero hero = new Hero("heroName");
-
+        addHero(heroService);
         try {
-            heroRepository.add(hero);
-            Assert.assertTrue(heroRepository.get(hero.getName()).isPresent());
-        } catch (IOException e) {
+            List<Hero> heroList = heroService.getHeroList();
+            for (Hero eachHero : heroList) {
+                if (!eachHero.getId().equals(setId)) {
+                    Assert.fail();
+                }
+            }
+
+        } catch (Exception e) {
             Assert.fail(e.toString());
         }
     }
 
-    @SuppressWarnings("Duplicates")
+
     @Test
     public void tryRemoveHeroById() {
-        HeroRepository heroRepository = new HeroRepository();
+        HeroService heroService = new HeroService(new HeroRepository());
 
-        Hero hero = new Hero("heroName");
-
+        addHero(heroService);
         try {
-            heroRepository.add(hero);
-        } catch (IOException e) {
-            Assert.fail(e.toString());
-        }
+            heroService.removeById(setId);
 
-        try {
-            heroRepository.deleteById(hero.getId());
-            Assert.assertFalse(heroRepository.get(hero.getId()).isPresent());
+            if (heroService.getHeroById(setId).isPresent()) {
+                Assert.fail();
+            }
         } catch (Exception e) {
             Assert.fail(e.toString());
         }
     }
 
-    @SuppressWarnings("Duplicates")
+
     @Test
     public void tryRemoveHeroByName() {
-        HeroRepository heroRepository = new HeroRepository();
+        HeroService heroService = new HeroService(new HeroRepository());
 
-        Hero hero = new Hero("heroName");
-
+        addHero(heroService);
         try {
-            heroRepository.add(hero);
-        } catch (IOException e) {
-            Assert.fail(e.toString());
-        }
-
-        try {
-            heroRepository.deleteByName(hero.getName());
-            Assert.assertFalse(heroRepository.get(hero.getName()).isPresent());
+            heroService.removeByName("heroName");
+            if (heroService.getHeroByName("heroName").isPresent()) {
+                Assert.fail();
+            }
         } catch (Exception e) {
             Assert.fail(e.toString());
         }
@@ -209,24 +188,36 @@ public class TestHeroService {
 
     @Test
     public void tryEditHeroName() {
-        HeroService service = new HeroService(new HeroRepository());
+        HeroService heroService = new HeroService(new HeroRepository());
 
-        String heroNameForEdit = "heroNameForEdit";
-        String editedName = "editedName";
+        addHero(heroService);
 
-        Hero hero = null;
+        String newName = "editedName";
+        heroService.editHeroName(setId, newName);
+
+        if (!(heroService.getHeroById(setId)).get().getName().equals(newName)) {
+            Assert.fail();
+        }
+    }
+
+    //add hero for test
+    private void addHero(HeroService heroService) {
         try {
-            hero = service.add(heroNameForEdit);
+            heroService.add("heroName");
         } catch (Exception e) {
             Assert.fail(e.toString());
         }
 
-        UUID idHero = hero.getId();
+        List<Hero> list = heroService.getHeroList();
 
-        service.editHeroName(idHero, editedName);
+        //упрощение поиска по id
+        String newStringId = "26dff229-de37-4e85-9a83-3d4800132038";
+        setId = UUID.fromString(newStringId);
 
-        if (hero.getName().equals(heroNameForEdit)) {
-            Assert.fail();
+        for (Hero eachHero : list) {
+            if (eachHero.getName().equals("heroName")) {
+                eachHero.setId(setId);
+            }
         }
     }
 }
