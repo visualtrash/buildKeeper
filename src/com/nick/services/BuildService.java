@@ -65,7 +65,7 @@ public class BuildService {
         }
     }
 
-    public void setHeroPosition(UUID id, String position) {
+    public void editPosition(UUID id, String position) {
         Optional<Build> optionalBuild = buildRepository.get(id);
 
         if (optionalBuild.isPresent()) {
@@ -81,6 +81,15 @@ public class BuildService {
         if (optionalBuild.isPresent()) {
             Build build1 = optionalBuild.get();
             build1.setItems(items);
+            buildRepository.update(build1);
+        }
+    }
+
+    public void updateAbilities(UUID id, List<Ability> abilities) throws Exception {
+        Optional<Build> optionalBuild = buildRepository.get(id);
+        if (optionalBuild.isPresent()) {
+            Build build1 = optionalBuild.get();
+            build1.setAbilities(abilities);
             buildRepository.update(build1);
         }
     }

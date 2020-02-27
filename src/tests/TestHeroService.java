@@ -108,16 +108,16 @@ public class TestHeroService {
 
     @Test
     public void tryGetAllHeroes() {
-        HeroService service = new HeroService(new HeroRepository());
+        HeroService heroService = new HeroService(new HeroRepository());
 
         try {
             // первая фаза теста - подготовка данных
             for (int i = 0; i < 50; i++) {
-                service.add("TEST_HERO_" + i);
+                heroService.add("TEST_HERO_" + i);
             }
 
             // вторая фаза теста - проверка ожидаемого результата
-            List heroList = service.getHeroList();
+            List heroList = heroService.getHeroList();
             Assert.assertEquals(50, heroList.size());
         } catch (Exception e) {
             Assert.fail(e.toString());
@@ -167,7 +167,7 @@ public class TestHeroService {
 
     @SuppressWarnings("Duplicates")
     @Test
-    public void tryRemoveItemById() {
+    public void tryRemoveHeroById() {
         HeroRepository heroRepository = new HeroRepository();
 
         Hero hero = new Hero("heroName");
@@ -188,7 +188,7 @@ public class TestHeroService {
 
     @SuppressWarnings("Duplicates")
     @Test
-    public void tryRemoveItemByName() {
+    public void tryRemoveHeroByName() {
         HeroRepository heroRepository = new HeroRepository();
 
         Hero hero = new Hero("heroName");
