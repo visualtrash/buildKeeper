@@ -12,20 +12,19 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class TestBuildService {
-    private UUID setId = null;
 
     @Test
     public void tryAddBuild() {
         BuildService buildService = new BuildService(new BuildRepository());
 
-        add(buildService);
-        List<Build> list = buildService.getBuildList();
+        Build build = createTestBuild();
+        buildService.add(build);
 
+        List<Build> list = buildService.getBuildList();
         for (Build eachBuild : list) {
-            if (!eachBuild.getName().equals("userBuildName")) {
+            if (!eachBuild.getName().equals(build.getName())) {
                 Assert.fail();
             }
         }
@@ -37,7 +36,7 @@ public class TestBuildService {
         try {
             // первая фаза теста - подготовка данных
             for (int i = 0; i < 5; i++) {
-                add(buildService);
+                buildService.add(createTestBuild());
             }
 
             // вторая фаза теста - проверка ожидаемого результата
@@ -53,22 +52,17 @@ public class TestBuildService {
         BuildService buildService = new BuildService(new BuildRepository());
 
         //add
-        add(buildService);
+        Build build = createTestBuild();
+        buildService.add(build);
 
         //remove
-        UUID buildId = null;
         List<Build> list = buildService.getBuildList();
 
-        for (Build eachBuild : list) {
-            if (eachBuild.getName().equals("userBuildName")) {
-                buildId = eachBuild.getId();
-            }
-        }
-
         try {
-            buildService.removeById(buildId);
+            buildService.removeById(build.getId());
+
             for (Build eachBuild : list) {
-                if (eachBuild.getId().equals(buildId)) {
+                if (eachBuild.getId().equals(build.getId())) {
                     Assert.fail();
                 }
             }
@@ -81,14 +75,15 @@ public class TestBuildService {
     public void tryRenameBuild() {
         BuildService buildService = new BuildService(new BuildRepository());
 
-        add(buildService);
+        Build build = createTestBuild();
+        buildService.add(build);
 
         List<Build> list = buildService.getBuildList();
         try {
-            buildService.updateName(setId, "newName");
+            buildService.updateName(build.getId(), "newName");
 
             for (Build eachBuild : list) {
-                if (!eachBuild.getId().equals(setId) && !eachBuild.getName().equals("newName")) {
+                if (eachBuild.getId().equals(build.getId()) && !eachBuild.getName().equals("newName")) {
                     Assert.fail();
                 }
             }
@@ -101,13 +96,14 @@ public class TestBuildService {
     public void tryEditHeroPosition() {
         BuildService buildService = new BuildService(new BuildRepository());
 
-        add(buildService);
+        Build build = createTestBuild();
+        buildService.add(createTestBuild());
 
-        buildService.editPosition(setId, "top");
+        buildService.editPosition(build.getId(), "top");
 
         List<Build> list = buildService.getBuildList();
         for (Build eachBuild : list) {
-            if (eachBuild.getId().equals(setId) && !eachBuild.getHeroPosition().equals("top")) {
+            if (eachBuild.getId().equals(build.getId()) && !eachBuild.getHeroPosition().equals("top")) {
                 Assert.fail();
             }
         }
@@ -117,16 +113,17 @@ public class TestBuildService {
     public void tryUpdateItems() {
         BuildService buildService = new BuildService(new BuildRepository());
 
-        add(buildService);
+        Build build = createTestBuild();
+        buildService.add(build);
 
         List<Item> itemList = new ArrayList<>();
         itemList.add(new Item("cool hat"));
         try {
-            buildService.updateItems(setId, itemList);
+            buildService.updateItems(build.getId(), itemList);
 
             List<Build> list = buildService.getBuildList();
             for (Build eachBuild : list) {
-                if (eachBuild.getId().equals(setId)) {
+                if (eachBuild.getId().equals(build.getId())) {
                     List<Item> editedItemList = eachBuild.getItems();
 
                     for (Item eachItem : editedItemList) {
@@ -146,15 +143,16 @@ public class TestBuildService {
     public void tryUpdateHeroInBuild() {
         BuildService buildService = new BuildService(new BuildRepository());
 
-        add(buildService);
+        Build build = createTestBuild();
+        buildService.add(build);
 
         Hero newHero = new Hero("newHero");
         try {
-            buildService.updateHero(setId, newHero);
+            buildService.updateHero(build.getId(), newHero);
 
             List<Build> list = buildService.getBuildList();
             for (Build eachBuild : list) {
-                if (eachBuild.getId().equals(setId) && !eachBuild.getHero().getName().equals("newHero")) {
+                if (eachBuild.getId().equals(build.getId()) && !eachBuild.getHero().getName().equals("newHero")) {
                     Assert.fail();
                 }
             }
@@ -167,7 +165,8 @@ public class TestBuildService {
     public void tryUpdateAbilitiesInBuild() {
         BuildService buildService = new BuildService(new BuildRepository());
 
-        add(buildService);
+        Build build = createTestBuild();
+        buildService.add(build);
 
         List<Build> buildList = buildService.getBuildList();
 
@@ -180,13 +179,13 @@ public class TestBuildService {
         newAbilities.add(Ability.R);
 
         try {
-            buildService.updateAbilities(setId, newAbilities);
+            buildService.updateAbilities(build.getId(), newAbilities);
         } catch (Exception e) {
             Assert.fail(e.toString());
         }
 
         for (Build eachBuild : buildList) {
-            if (eachBuild.getId().equals(setId)) {
+            if (eachBuild.getId().equals(build.getId())) {
                 List<Ability> editedAbilitiesList = eachBuild.getAbilities();
                 if (!editedAbilitiesList.equals(newAbilities)) {
                     Assert.fail();
@@ -195,8 +194,7 @@ public class TestBuildService {
         }
     }
 
-    //add build for test
-    private void add(BuildService buildService) {
+    private Build createTestBuild() {
         Hero hero = new Hero("Hero");
 
         List<Item> itemList = new ArrayList<>();
@@ -208,19 +206,7 @@ public class TestBuildService {
         List<Ability> abilities = new ArrayList<>();
         abilities.add(Ability.Q);
 
-        buildService.add("userBuildName", hero, itemList, rune, abilities, "jungle");
-
-        List<Build> list = buildService.getBuildList();
-
-        //упрощение поиска по id
-        String newStringId = "26dff229-de37-4e85-9a83-3d4800132038";
-        setId = UUID.fromString(newStringId);
-
-        for (Build eachBuild : list) {
-            if (eachBuild.getName().equals("userBuildName")) {
-                eachBuild.setId(setId);
-            }
-        }
+        return new Build("buildName", hero, itemList, rune, abilities, "userHeroPosition");
     }
 }
 

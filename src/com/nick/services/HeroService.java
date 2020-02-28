@@ -3,6 +3,7 @@ package com.nick.services;
 import com.nick.dal.entities.Hero;
 import com.nick.dal.repositories.HeroRepository;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -18,6 +19,12 @@ public class HeroService {
     // удобно когда метод добавления сущности потом возвращает новую созданную сущность обратно
     public Hero add(String heroName) throws Exception {
         Hero hero = new Hero(heroName);
+        heroRepository.add(hero);
+
+        return hero;
+    }
+
+    public Hero add(Hero hero) throws IOException {
         heroRepository.add(hero);
 
         return hero;

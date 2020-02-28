@@ -30,6 +30,11 @@ public class BuildService {
         return newBuild;
     }
 
+    public Build add(Build build) {
+        buildRepository.add(build);
+        return build;
+    }
+
     public void removeById(UUID buildId) throws Exception {
         buildRepository.deleteById(buildId);
     }

@@ -23,8 +23,6 @@ public class TestHeroService {
     private static Path source = Paths.get("saveData");
     private static Path newDir = Paths.get("saveData_temp");
 
-    private UUID setId = null;
-
     // мы хотим создать механизм переноса пользовательских данных во временную папку перед каждым тестом
     @BeforeClass
     public static void prepareData() {
@@ -123,13 +121,12 @@ public class TestHeroService {
     public void tryGetHeroByName() {
         HeroService heroService = new HeroService(new HeroRepository());
 
-        addHero(heroService);
-        try {
-            Optional<Hero> getHero = heroService.getHeroByName("heroName");
-            if (!getHero.get().getId().equals(setId)) {
-                Assert.fail();
-            }
+        Hero hero = createTestHero();
 
+        try {
+            heroService.add(hero);
+
+            Assert.assertFalse(!heroService.getHeroByName(hero.getName()).isPresent());
         } catch (Exception e) {
             Assert.fail(e.toString());
         }
@@ -139,11 +136,14 @@ public class TestHeroService {
     public void tryAddHero() {
         HeroService heroService = new HeroService(new HeroRepository());
 
-        addHero(heroService);
+        Hero hero = createTestHero();
+
+        List<Hero> heroList = heroService.getHeroList();
         try {
-            List<Hero> heroList = heroService.getHeroList();
+            heroService.add(hero);
+
             for (Hero eachHero : heroList) {
-                if (!eachHero.getId().equals(setId)) {
+                if (!eachHero.getId().equals(hero.getId())) {
                     Assert.fail();
                 }
             }
@@ -158,13 +158,14 @@ public class TestHeroService {
     public void tryRemoveHeroById() {
         HeroService heroService = new HeroService(new HeroRepository());
 
-        addHero(heroService);
-        try {
-            heroService.removeById(setId);
+        Hero hero = createTestHero();
 
-            if (heroService.getHeroById(setId).isPresent()) {
-                Assert.fail();
-            }
+        try {
+            heroService.add(hero);
+
+            heroService.removeById(hero.getId());
+
+            Assert.assertFalse(heroService.getHeroById(hero.getId()).isPresent());
         } catch (Exception e) {
             Assert.fail(e.toString());
         }
@@ -175,12 +176,11 @@ public class TestHeroService {
     public void tryRemoveHeroByName() {
         HeroService heroService = new HeroService(new HeroRepository());
 
-        addHero(heroService);
+        Hero hero = createTestHero();
         try {
-            heroService.removeByName("heroName");
-            if (heroService.getHeroByName("heroName").isPresent()) {
-                Assert.fail();
-            }
+            heroService.add(hero);
+            heroService.removeByName(hero.getName());
+            Assert.assertFalse(heroService.getHeroByName("heroName").isPresent());
         } catch (Exception e) {
             Assert.fail(e.toString());
         }
@@ -190,34 +190,20 @@ public class TestHeroService {
     public void tryEditHeroName() {
         HeroService heroService = new HeroService(new HeroRepository());
 
-        addHero(heroService);
+        Hero hero = createTestHero();
 
-        String newName = "editedName";
-        heroService.editHeroName(setId, newName);
+        try {
+            heroService.add(hero);
 
-        if (!(heroService.getHeroById(setId)).get().getName().equals(newName)) {
-            Assert.fail();
+            heroService.editHeroName(hero.getId(), "newName");
+            Assert.assertFalse(!hero.getName().equals("newName"));
+        } catch (IOException e) {
+            Assert.fail(e.toString());
         }
     }
 
     //add hero for test
-    private void addHero(HeroService heroService) {
-        try {
-            heroService.add("heroName");
-        } catch (Exception e) {
-            Assert.fail(e.toString());
-        }
-
-        List<Hero> list = heroService.getHeroList();
-
-        //упрощение поиска по id
-        String newStringId = "26dff229-de37-4e85-9a83-3d4800132038";
-        setId = UUID.fromString(newStringId);
-
-        for (Hero eachHero : list) {
-            if (eachHero.getName().equals("heroName")) {
-                eachHero.setId(setId);
-            }
-        }
+    private Hero createTestHero() {
+        return new Hero("Hero");
     }
 }
